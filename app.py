@@ -1,3 +1,5 @@
+from crypt import methods
+
 from flask import Flask, render_template, jsonify, request
 from flask_mysqldb import MySQL
 from config import config
@@ -5,6 +7,10 @@ from config import config
 
 app = Flask(__name__)
 cnx = MySQL(app)
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 
 @app.route('/users', methods=['GET'])
 def list_users():
