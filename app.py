@@ -9,7 +9,7 @@ app = Flask(__name__)
 cnx = MySQL(app)
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index1.html')
 
 
 @app.route('/users', methods=['GET'])
