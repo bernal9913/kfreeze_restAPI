@@ -90,7 +90,7 @@ def delete_user(usr):
 def page_not_found(error):
     return render_template('not_steph.html'), 404
 
-@app.route('/dbtest', methods=['GET', 'POST'])
+@app.route('/dbtest', methods=['GET'])
 def test():
     if request.method == 'GET':
         cur = cnx.connection.cursor()
