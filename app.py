@@ -90,6 +90,10 @@ def delete_user(usr):
 def page_not_found(error):
     return render_template('not_steph.html'), 404
 
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('not_steph.html'), 404
+
 if __name__ == '__main__':
     # conda activate RestApi
     # db.execSQL("CREATE TABLE users(username text PRIMARY KEY, email text, password text, birthdate text, nacion text)");
