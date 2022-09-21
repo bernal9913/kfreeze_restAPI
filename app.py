@@ -99,5 +99,5 @@ if __name__ == '__main__':
     # db.execSQL("CREATE TABLE users(username text PRIMARY KEY, email text, password text, birthdate text, nacion text)");
     app.config.from_object(config['development'])
     app.register_error_handler(404, page_not_found)
-    app.run()
+    app.run(debug=True)
     
