@@ -108,11 +108,3 @@ def test():
 @app.errorhandler(404)
 def not_found(error):
     return render_template('not_steph.html'), 404
-
-if __name__ == '__main__':
-    # conda activate RestApi
-    # db.execSQL("CREATE TABLE users(username text PRIMARY KEY, email text, password text, birthdate text, nacion text)");
-    #app.config.from_object(config['development'])
-    app.register_error_handler(404, page_not_found)
-    app.run(debug=True)
-    
