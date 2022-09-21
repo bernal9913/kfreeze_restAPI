@@ -90,6 +90,15 @@ def delete_user(usr):
 def page_not_found(error):
     return render_template('not_steph.html'), 404
 
+@app.route('/dbtest', methods=['GET', 'POST'])
+def test():
+    if request.method == 'GET':
+        cur = cnx.connection.cursor()
+        sql = "Select  * from users"
+        cur.execute(sql)
+        data = cur.fetchall()
+        return render_template('dbtest.html', data = data)
+
 @app.errorhandler(404)
 def not_found(error):
     return render_template('not_steph.html'), 404
