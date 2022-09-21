@@ -97,7 +97,7 @@ def test():
         sql = "Select  * from users"
         cur.execute(sql)
         data = cur.fetchall()
-        return render_template('dbtest.html', data = data)
+        return render_template('dbTest.html', data = data)
 
 @app.errorhandler(404)
 def not_found(error):
