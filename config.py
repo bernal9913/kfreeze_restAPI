@@ -1,7 +1,7 @@
 class DevelopmentConfig():
     DEBUG = True
     PORT = 5001
-    MYSQL_HOST = 'localhost'
+    MYSQL_HOST = 'us-cdbr-east-06.cleardb.net'
     # MYSQL_USER = 'root'
     # MYSQL_DB = 'loginRest'
     MYSQL_USER = 'b6c581180a5036'
