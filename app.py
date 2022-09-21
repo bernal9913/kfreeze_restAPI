@@ -7,6 +7,10 @@ from config import config
 
 app = Flask(__name__)
 cnx = MySQL(app)
+app.config['MYSQL_HOST'] = 'us-cdbr-east-06.cleardb.net'
+app.config['MYSQL_USER'] = 'b6c581180a5036'
+app.config['MYSQL_PASSWORD'] = '6590ad23'
+app.config['MYSQL_DB'] = 'heroku_2f678db4338be62'
 @app.route('/')
 def index():
     return render_template('index1.html')
@@ -106,7 +110,7 @@ def not_found(error):
 if __name__ == '__main__':
     # conda activate RestApi
     # db.execSQL("CREATE TABLE users(username text PRIMARY KEY, email text, password text, birthdate text, nacion text)");
-    app.config.from_object(config['development'])
+    #app.config.from_object(config['development'])
     app.register_error_handler(404, page_not_found)
     app.run(debug=True)
     
