@@ -88,7 +88,7 @@ def delete_user(usr):
     except Exception as ex:
         return jsonify({"msg": "Error: cannot drop the whole table:C"})
 def page_not_found(error):
-    return "<h1>Yo habia ponido una Steph aqui y no esta</h1>", 404
+    return render_template('not_steph.html'), 404
 
 if __name__ == '__main__':
     # conda activate RestApi
