@@ -126,6 +126,6 @@ def page_not_found(error):
 def not_found(error):
     return render_template('not_steph.html'), 404
 
-
-if __name__ == '__main__':
-    app.run(debug=True)
+# uncomment those lines for local testing purposes
+#if __name__ == '__main__':
+#    app.run(debug=True)
