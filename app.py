@@ -81,7 +81,7 @@ def get_user():
 def register_user():
     try:
         cur = mysql.connection.cursor()
-        sql = "INSERT INTO usersBernal(username, email, password, birthdate, placeOfBirth) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')".format(
+        sql = "INSERT INTO `heroku_d02c1597b242410`.`usersbernal`(username, email, password, datebirth, placeOfBirth) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')".format(
             request.json['user'], request.json['email'],
             request.json['password'], request.json['birthdate'],
             request.json['nationality'])
@@ -92,14 +92,15 @@ def register_user():
         return jsonify({"msg": "Error registering user"})
 
 
-@app.route('/users/<usr>', methods=['PUT'])
-def update_user(usr):
+@app.route('/users', methods=['PUT'])
+# update password for user account
+def update_user():
     try:
         cur = mysql.connection.cursor()
-        sql = "UPDATE users SET password ='{0}', nationality ='{1}' WHERE email = '{2}'".format(
-            request.json['password'],
+        sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET password ='{2}' WHERE email = '{0}' AND placeOfBirth ='{1}' ".format(
+            request.json['email'],
             request.json['nationality'],
-            usr)
+            request.json['password'])
         cur.execute(sql)
         mysql.connection.commit()  # commit the transaction
         return jsonify({'msg': 'Successfully modified user'})
@@ -107,11 +108,12 @@ def update_user(usr):
         return jsonify({"msg": "Error modifying user"})
 
 
-@app.route('/users/<usr>', methods=['DELETE'])
-def delete_user(usr):
+@app.route('/users/', methods=['DELETE'])
+def delete_user():
     try:
         cur = mysql.connection.cursor()
-        sql = "DELETE FROM users WHERE email = '{0}'".format(usr)
+        sql = "DELETE FROM `heroku_d02c1597b242410`.`usersbernal` WHERE email = '{0}'".format(
+            request.json['email'])
         cur.execute(sql)
         mysql.connection.commit()  # commit the transaction
         return jsonify({'msg': 'User deleted successfully'})
@@ -127,5 +129,5 @@ def not_found(error):
     return render_template('not_steph.html'), 404
 
 # uncomment those lines for local testing purposes
-#if __name__ == '__main__':
+# if __name__ == '__main__':
 #    app.run(debug=True)
