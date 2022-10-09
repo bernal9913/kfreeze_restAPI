@@ -1,53 +1,74 @@
 from crypt import methods
 
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect, url_for
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from config import config
 
-
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'us-cdbr-east-06.cleardb.net'
-app.config['MYSQL_USER'] = 'b6c581180a5036'
-app.config['MYSQL_PASSWORD'] = '6590ad23'
-app.config['MYSQL_DB'] = 'heroku_2f678db4338be62'
+app.config['MYSQL_USER'] = 'b7e3a09e061e12'
+app.config['MYSQL_PASSWORD'] = '2f9d3cc1'
+app.config['MYSQL_DB'] = 'heroku_d02c1597b242410'
 
 mysql = MySQL(app)
+
+
 @app.route('/')
 def index():
     return render_template('index1.html')
+
+
+@app.route('/verTabla', methods=['GET'])
+def vertabla():
+    if request.method == 'GET':
+        try:
+            cur = mysql.connection.cursor()
+            sql = "SELECT * FROM usersBernal "
+            cur.execute(sql)
+            dato = cur.fetchall()
+            return render_template('verTabla.html', data=dato)
+        except Exception as e:
+            return redirect(url_for('/'))
 
 
 @app.route('/users', methods=['GET'])
 def list_users():
     try:
         cur = mysql.connection.cursor()
-        sql = "SELECT * FROM users "
+        sql = "SELECT * FROM usersBernal "
         cur.execute(sql)
         dato = cur.fetchall()
         usrs = []
         for f in dato:
-            usr = {'id_user':f[0], 'username':f[1],
-                   'email':f[2], 'password':f[3],
-                   'birthdate':f[4], 'nationality':f[5]}
+            usr = {'id_user': f[0], 'username': f[1],
+                   'password': f[2], 'email': f[3],
+                   'birthdate': f[4], 'nationality': f[5],
+                   'userType': f[6]}
             usrs.append(usr)
         print(dato)
         return jsonify({'users': usrs, 'msg': 'users founded'})
         # return "table founded!"
     except Exception as ex:
-        return "Error"
+        return "Error en query o la vida"
 
-@app.route('/users/<usr>', methods=['GET'])
-def get_user(usr):
+
+@app.route('/log_user', methods=['GET'])
+# login user method
+def get_user():
     try:
         cur = mysql.connection.cursor()
-        sql = "SELECT * FROM users WHERE username = '{0}' ".format(usr)
+        # sql = "SELECT * FROM users WHERE username = '{0}' ".format(usr)
+        sql = "SELECT * FROM usersBernal WHERE username = '{0}' AND password = '{1}'".format(
+            request.json['user'],
+            request.json['password'])
         cur.execute(sql)
-        d = cur.fetchone()
-        if d != None:
-            usr = {'id_user': d[0], 'username': d[1],
-                   'email': d[2], 'password': d[3],
-                   'birthdate': d[4], 'nationality': d[5]}
+        f = cur.fetchone()
+        if f != None:
+            usr = {'id_user': f[0], 'username': f[1],
+                   'password': f[2], 'email': f[3],
+                   'birthdate': f[4], 'nationality': f[5],
+                   'userType': f[6]}
             return jsonify({'user': usr, 'msg': "user founded"})
         else:
             return jsonify({"msg": "Error: user not founded"})
@@ -56,14 +77,16 @@ def get_user(usr):
 
 
 @app.route('/users', methods=['POST'])
+# Register a user method
 def register_user():
     try:
         cur = mysql.connection.cursor()
-        sql = "INSERT INTO users(username, email, password, birthdate, nationality) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')".format(request.json['user'], request.json['email'],
-                                                                     request.json['password'], request.json['birthdate'],
-                                                                     request.json['nationality'])
+        sql = "INSERT INTO usersBernal(username, email, password, birthdate, placeOfBirth) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')".format(
+            request.json['user'], request.json['email'],
+            request.json['password'], request.json['birthdate'],
+            request.json['nationality'])
         cur.execute(sql)
-        mysql.connection.commit() # commit the transaction
+        mysql.connection.commit()  # commit the transaction
         return jsonify({'msg': 'Successfully registered'})
     except Exception as ex:
         return jsonify({"msg": "Error registering user"})
@@ -73,11 +96,12 @@ def register_user():
 def update_user(usr):
     try:
         cur = mysql.connection.cursor()
-        sql = "UPDATE users SET password ='{0}', nationality ='{1}' WHERE email = '{2}'".format(request.json['password'],
-                                                                                                request.json['nationality'],
-                                                                                                usr)
+        sql = "UPDATE users SET password ='{0}', nationality ='{1}' WHERE email = '{2}'".format(
+            request.json['password'],
+            request.json['nationality'],
+            usr)
         cur.execute(sql)
-        mysql.connection.commit() # commit the transaction
+        mysql.connection.commit()  # commit the transaction
         return jsonify({'msg': 'Successfully modified user'})
     except Exception as ex:
         return jsonify({"msg": "Error modifying user"})
@@ -93,18 +117,15 @@ def delete_user(usr):
         return jsonify({'msg': 'User deleted successfully'})
     except Exception as ex:
         return jsonify({"msg": "Error: cannot drop the whole table:C"})
+
+
 def page_not_found(error):
     return render_template('not_steph.html'), 404
-
-@app.route('/dbtest', methods=['GET'])
-def test():
-    if request.method == 'GET':
-        cur = mysql.connection.cursor()
-        sql = "Select  * from users"
-        cur.execute(sql)
-        data = cur.fetchall()
-        return render_template('dbTest.html', data = data)
 
 @app.errorhandler(404)
 def not_found(error):
     return render_template('not_steph.html'), 404
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
