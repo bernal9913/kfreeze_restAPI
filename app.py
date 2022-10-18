@@ -53,7 +53,7 @@ def list_users():
         return "Error en query o la vida"
 
 
-@app.route('/log_user', methods=['GET'])
+@app.route('/log_user', methods=['POST'])
 # login user method
 def get_user():
     try:
@@ -71,7 +71,7 @@ def get_user():
                    'userType': f[6]}
             return jsonify({'user': usr, 'msg': "user founded"})
         else:
-            return jsonify({"msg": "Error: user not founded"})
+            return jsonify({'msg': "Error: user not founded"})
     except Exception as ex:
         return jsonify({"msg": "Error getting user"})
 
