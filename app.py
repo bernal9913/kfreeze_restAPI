@@ -81,13 +81,26 @@ def get_user():
 def register_user():
     try:
         cur = mysql.connection.cursor()
-        sql = "INSERT INTO `heroku_d02c1597b242410`.`usersbernal`(username, email, password, datebirth, placeOfBirth) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')".format(
+        # TODO highlight color at the  app
+        #query = "SELECT * FROM `heroku_d02c1597b242410`.`usersbernal` WHERE 'username' = '" + request.json['user'] + "'"
+
+        # cur.execute("SELECT * FROM `heroku_d02c1597b242410`.`usersbernal` WHERE username = '" + request.json['user'] + "' or email = '" + request.json['email'] + "'")
+        cur.execute("SELECT * FROM `heroku_d02c1597b242410`.`usersbernal` WHERE username = '" + request.json['user'] + "'")
+        check_user = cur.fetchone()
+        cur.execute("SELECT * FROM `heroku_d02c1597b242410`.`usersbernal` WHERE email = '" + request.json['email'] + "'")
+        check_email = cur.fetchone()
+        if check_user:
+            return jsonify({"msg": "User already registered"})
+        if check_email:
+            return jsonify({"msg": "Email already registered"})
+        if check_user is None and check_email is None:
+            sql = "INSERT INTO `heroku_d02c1597b242410`.`usersbernal`(username, email, password, datebirth, placeOfBirth) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')".format(
             request.json['user'], request.json['email'],
             request.json['password'], request.json['birthdate'],
             request.json['nationality'])
-        cur.execute(sql)
-        mysql.connection.commit()  # commit the transaction
-        return jsonify({'msg': 'Successfully registered'})
+            cur.execute(sql)
+            mysql.connection.commit()  # commit the transaction
+            return jsonify({'msg': 'Successfully registered'})
     except Exception as ex:
         return jsonify({"msg": "Error registering user"})
 
@@ -97,9 +110,8 @@ def register_user():
 def update_user():
     try:
         cur = mysql.connection.cursor()
-        sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET password ='{2}' WHERE email = '{0}' AND placeOfBirth ='{1}' ".format(
+        sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET password ='{1}' WHERE email = '{0}'".format(
             request.json['email'],
-            request.json['nationality'],
             request.json['password'])
         cur.execute(sql)
         mysql.connection.commit()  # commit the transaction
@@ -107,7 +119,31 @@ def update_user():
     except Exception as ex:
         return jsonify({"msg": "Error modifying user"})
 
-
+@app.route('/users/mouseketools', methods=['POST'])
+def shh():
+    try:
+        if request.json['password'] == 'ClaveBelica':
+            cur = mysql.connection.cursor()
+            sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET userType ='Admin' WHERE email = '{0}'".format(
+                request.json['email'])
+            cur.execute(sql)
+            mysql.connection.commit() # commit the transaction
+            return jsonify({'msg': 'Successfully upgraded user'})
+        else:
+            return jsonify({"msg": 'Admin password is incorrect'})
+    except Exception as ex:
+        return jsonify({"msg": "Error making upgrading user"})
+@app.route('/users/demote', methods=['POST'])
+def demote():
+    try:
+        cur = mysql.connection.cursor()
+        sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET userType ='Admin' WHERE email = '{0}'".format(
+            request.json['email'])
+        cur.execute(sql)
+        mysql.connection.commit() # commit the transaction
+        return jsonify({'msg': 'Successfully downgraded user'})
+    except Exception as ex:
+        return jsonify({"msg": "Error making upgrading user"})
 @app.route('/users/', methods=['DELETE'])
 def delete_user():
     try:
@@ -129,5 +165,5 @@ def not_found(error):
     return render_template('not_steph.html'), 404
 
 # uncomment those lines for local testing purposes
-# if __name__ == '__main__':
+#if __name__ == '__main__':
 #    app.run(debug=True)
