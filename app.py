@@ -148,11 +148,16 @@ def demote():
 def delete_user():
     try:
         cur = mysql.connection.cursor()
-        sql = "DELETE FROM `heroku_d02c1597b242410`.`usersbernal` WHERE email = '{0}'".format(
-            request.json['email'])
-        cur.execute(sql)
-        mysql.connection.commit()  # commit the transaction
-        return jsonify({'msg': 'User deleted successfully'})
+        cur.execute("SELECT * FROM `heroku_d02c1597b242410`.`usersbernal` WHERE email = '" + request.json['email'] + "'")
+        check_user = cur.fetchone()
+        if check_user:
+            sql = "DELETE FROM `heroku_d02c1597b242410`.`usersbernal` WHERE email = '{0}'".format(
+                request.json['email'])
+            cur.execute(sql)
+            mysql.connection.commit()  # commit the transaction
+            return jsonify({'msg': 'User deleted successfully'})
+        else:
+            return jsonify({'msg': ' User not founded'})
     except Exception as ex:
         return jsonify({"msg": "Error: cannot drop the whole table:C"})
 
