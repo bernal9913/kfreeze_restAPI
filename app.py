@@ -137,7 +137,7 @@ def shh():
 def demote():
     try:
         cur = mysql.connection.cursor()
-        sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET userType ='Admin' WHERE email = '{0}'".format(
+        sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET userType ='Regular' WHERE email = '{0}'".format(
             request.json['email'])
         cur.execute(sql)
         mysql.connection.commit() # commit the transaction
