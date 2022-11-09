@@ -81,7 +81,6 @@ def get_user():
 def register_user():
     try:
         cur = mysql.connection.cursor()
-        # TODO highlight color at the  app
         #query = "SELECT * FROM `heroku_d02c1597b242410`.`usersbernal` WHERE 'username' = '" + request.json['user'] + "'"
 
         # cur.execute("SELECT * FROM `heroku_d02c1597b242410`.`usersbernal` WHERE username = '" + request.json['user'] + "' or email = '" + request.json['email'] + "'")
@@ -110,12 +109,18 @@ def register_user():
 def update_user():
     try:
         cur = mysql.connection.cursor()
-        sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET password ='{1}' WHERE email = '{0}'".format(
-            request.json['email'],
-            request.json['password'])
-        cur.execute(sql)
-        mysql.connection.commit()  # commit the transaction
-        return jsonify({'msg': 'Successfully modified user'})
+        cur.execute(
+            "SELECT * FROM `heroku_d02c1597b242410`.`usersbernal` WHERE email = '" + request.json['email'] + "'")
+        check_user = cur.fetchone()
+        if check_user:
+            sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET password ='{1}' WHERE email = '{0}'".format(
+                request.json['email'],
+                request.json['password'])
+            cur.execute(sql)
+            mysql.connection.commit()  # commit the transaction
+            return jsonify({'msg': 'Successfully modified user'})
+        else:
+            return jsonify({'msg': 'user not found'})
     except Exception as ex:
         return jsonify({"msg": "Error modifying user"})
 
@@ -124,11 +129,18 @@ def shh():
     try:
         if request.json['password'] == 'ClaveBelica':
             cur = mysql.connection.cursor()
-            sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET userType ='Admin' WHERE email = '{0}'".format(
+            #cur = mysql.connection.cursor()
+            cur.execute(
+                "SELECT * FROM `heroku_d02c1597b242410`.`usersbernal` WHERE email = '" + request.json['email'] + "'")
+            check_user = cur.fetchone()
+            if check_user:
+                sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET userType ='Admin' WHERE email = '{0}'".format(
                 request.json['email'])
-            cur.execute(sql)
-            mysql.connection.commit() # commit the transaction
-            return jsonify({'msg': 'Successfully upgraded user'})
+                cur.execute(sql)
+                mysql.connection.commit() # commit the transaction
+                return jsonify({'msg': 'Successfully upgraded user'})
+            else:
+                return jsonify({'msg': 'User not found'})
         else:
             return jsonify({"msg": 'Admin password is incorrect'})
     except Exception as ex:
@@ -137,11 +149,18 @@ def shh():
 def demote():
     try:
         cur = mysql.connection.cursor()
-        sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET userType ='Regular' WHERE email = '{0}'".format(
-            request.json['email'])
-        cur.execute(sql)
-        mysql.connection.commit() # commit the transaction
-        return jsonify({'msg': 'Successfully downgraded user'})
+        cur.execute(
+            "SELECT * FROM `heroku_d02c1597b242410`.`usersbernal` WHERE email = '" + request.json['email'] + "'")
+        check_user = cur.fetchone()
+        if check_user:
+        #cur = mysql.connection.cursor()
+            sql = "UPDATE `heroku_d02c1597b242410`.`usersbernal` SET userType ='Regular' WHERE email = '{0}'".format(
+                request.json['email'])
+            cur.execute(sql)
+            mysql.connection.commit() # commit the transaction
+            return jsonify({'msg': 'Successfully downgraded user'})
+        else:
+            return jsonify({'msg': 'User not found'})
     except Exception as ex:
         return jsonify({"msg": "Error making upgrading user"})
 @app.route('/users/', methods=['DELETE'])
@@ -157,7 +176,7 @@ def delete_user():
             mysql.connection.commit()  # commit the transaction
             return jsonify({'msg': 'User deleted successfully'})
         else:
-            return jsonify({'msg': ' User not founded'})
+            return jsonify({'msg': 'User not founded'})
     except Exception as ex:
         return jsonify({"msg": "Error: cannot drop the whole table:C"})
 
