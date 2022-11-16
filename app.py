@@ -60,7 +60,7 @@ def get_user():
     try:
         cur = mysql.connection.cursor()
         # sql = "SELECT * FROM users WHERE username = '{0}' ".format(usr)
-        sql = "SELECT * FROM usersBernal WHERE username = '{0}' AND password = '{1}'".format(
+        sql = "SELECT idusers, username, password, email, DATE_FORMAT(datebirth, '%d/%m/%Y') as dateBirth, placeOfBirth, userType, firstName, lastName FROM usersBernal WHERE username = '{0}' AND password = '{1}'".format(
             request.json['user'],
             request.json['password'])
         cur.execute(sql)
