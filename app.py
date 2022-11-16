@@ -36,7 +36,7 @@ def vertabla():
 def list_users():
     try:
         cur = mysql.connection.cursor()
-        sql = "SELECT * FROM usersBernal "
+        sql = "SELECT idusers, username, password, email, DATE_FORMAT(datebirth, '%d/%m/%Y') as dateBirth, placeOfBirth, userType, firstName, lastName FROM `heroku_d02c1597b242410`.`usersbernal`;"
         cur.execute(sql)
         dato = cur.fetchall()
         usrs = []
@@ -44,7 +44,8 @@ def list_users():
             usr = {'id_user': f[0], 'username': f[1],
                    'password': f[2], 'email': f[3],
                    'birthdate': f[4], 'nationality': f[5],
-                   'userType': f[6]}
+                   'userType': f[6], 'firstName': f[7],
+                   'lastName': f[8]}
             usrs.append(usr)
         print(dato)
         return jsonify({'users': usrs, 'msg': 'users founded'})
@@ -68,7 +69,8 @@ def get_user():
             usr = {'id_user': f[0], 'username': f[1],
                    'password': f[2], 'email': f[3],
                    'birthdate': f[4], 'nationality': f[5],
-                   'userType': f[6]}
+                   'userType': f[6], 'firstName': f[7],
+                   'lastName': f[8]}
             return jsonify({'user': usr, 'msg': "user founded"})
         else:
             return jsonify({'msg': "Error: user not founded"})
@@ -93,11 +95,19 @@ def register_user():
         if check_email:
             return jsonify({"msg": "Email already registered"})
         if check_user is None and check_email is None:
-            sql = "INSERT INTO `heroku_d02c1597b242410`.`usersbernal`(username, email, password, datebirth, placeOfBirth) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')".format(
-            request.json['user'], request.json['email'],
+            # TODO add first and last name
+            # TODO trimmear ms
+            val = (request.json['user'], request.json['email'],
             request.json['password'], request.json['birthdate'],
-            request.json['nationality'])
-            cur.execute(sql)
+            request.json['nationality'], request.json['firstName'],
+            request.json['lastName'])
+            sql = "INSERT INTO `heroku_d02c1597b242410`.`usersbernal`(username, email, password, datebirth, placeOfBirth, firstName, lastName) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            #sql = "INSERT INTO `heroku_d02c1597b242410`.`usersbernal`(username, email, password, datebirth, placeOfBirth, firstName, lastName) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}'), '{5}', '{6}'".format(
+            #request.json['user'], request.json['email'],
+            #request.json['password'], request.json['birthdate'],
+            #request.json['nationality'], request.json['firstName'],
+            #request.json['lastName'])
+            cur.execute(sql, val)
             mysql.connection.commit()  # commit the transaction
             return jsonify({'msg': 'Successfully registered'})
     except Exception as ex:
