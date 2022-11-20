@@ -222,7 +222,7 @@ def modphoto():
 def checkPhoto():
     try:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = '" + request.json['user'] + "'")
+        cur.execute("SELECT photo FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = '" + request.json['user'] + "'")
         #cur.execute(sql)
         check = cur.fetchone()
         if check:
