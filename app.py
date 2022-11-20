@@ -222,17 +222,16 @@ def modphoto():
 def checkPhoto():
     try:
         cur = mysql.connection.cursor()
-        sql = "SELECT photo FROM `heroku_d02c1597b242410`.`usersbernal` WHERE user = %s".format(request.json['user'])
-        cur.execute(sql)
+        cur.execute("SELECT * FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = '" + request.json['user'] + "'")
+        #cur.execute(sql)
         check = cur.fetchone()
-
         if check:
             photo = {'photo': check[0]}
             return jsonify({"msg":photo})
         else:
             return jsonify({"msg":"no photo available"})
     except Exception as e:
-        return jsonify({"msg": "Error"})
+        return jsonify({"msg": "Error on db "})
 def page_not_found(error):
     return render_template('not_steph.html'), 404
 
