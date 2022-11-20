@@ -222,12 +222,13 @@ def modphoto():
 def checkPhoto():
     try:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT photo FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = " + request.json['user'])
+        cur.execute("SELECT * FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = '" + request.json['user'] + "'")
         #cur.execute(sql)
         check = cur.fetchone()
-        if check:
-            photo = {'photo': check[0]}
-            return jsonify({"msg":photo})
+        if check != None:
+            usr = {'id_photo': check[0], 'username': check[1],
+                   'photo': check[2]}
+            return jsonify({'user': usr, 'msg': "user founded"})
         else:
             return jsonify({"msg":"no photo available"})
     except Exception as e:
