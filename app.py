@@ -10,7 +10,7 @@ app.config['MYSQL_HOST'] = 'us-cdbr-east-06.cleardb.net'
 app.config['MYSQL_USER'] = 'b7e3a09e061e12'
 app.config['MYSQL_PASSWORD'] = '2f9d3cc1'
 app.config['MYSQL_DB'] = 'heroku_d02c1597b242410'
-
+app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
 mysql = MySQL(app)
 
 
@@ -195,7 +195,7 @@ def addphoto():
     try:
         cur = mysql.connection.cursor()
         sql = "INSERT INTO `heroku_d02c1597b242410`.`dpbernal`(user, photo) VALUES (%s, %s)"
-        val = jsonify({"user": request.json['user'], "photo": request.json['photo']})
+        val = (request.json['user'], request.json['photo'])
         cur.execute(sql, val)
         mysql.connection.commit()
         return jsonify({"msg":"success"})
@@ -222,17 +222,16 @@ def modphoto():
 def checkPhoto():
     try:
         cur = mysql.connection.cursor()
-        sql = "SELECT photo FROM `heroku_d02c1597b242410`.`usersbernal` WHERE user = %s".format(request.json['user'])
-        cur.execute(sql)
+        cur.execute("SELECT photo FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = " + request.json['user'])
+        #cur.execute(sql)
         check = cur.fetchone()
-
         if check:
             photo = {'photo': check[0]}
             return jsonify({"msg":photo})
         else:
             return jsonify({"msg":"no photo available"})
     except Exception as e:
-        return jsonify({"msg": "Error"})
+        return jsonify({"msg": "Error on db "})
 def page_not_found(error):
     return render_template('not_steph.html'), 404
 
