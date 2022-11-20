@@ -195,7 +195,7 @@ def addphoto():
     try:
         cur = mysql.connection.cursor()
         sql = "INSERT INTO `heroku_d02c1597b242410`.`dpbernal`(user, photo) VALUES (%s, %s)"
-        val = jsonify({"user": request.json['user'], "photo": request.json['photo']})
+        val = {"user": request.json['user'], "photo": request.json['photo']}
         cur.execute(sql, val)
         mysql.connection.commit()
         return jsonify({"msg":"success"})
