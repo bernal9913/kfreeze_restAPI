@@ -228,10 +228,8 @@ def checkPhoto():
         #cur.execute(sql)
         check = cur.fetchone()
         if check != None:
-            base64_encoded_data = base64.b64encode(check[2])
-            base64_message = base64_encoded_data.decode('utf-8')
             usr = {'id_photo': check[0], 'username': check[1],
-                   'photo': base64_message}
+                   'photo': base64.b64decode(check[2])}
             return jsonify({'user': usr, 'msg': "u"})
         else:
             return jsonify({"msg":"no photo available"})
