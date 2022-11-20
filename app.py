@@ -223,7 +223,7 @@ def checkPhoto():
     try:
         cur = mysql.connection.cursor()
         val = (request.json['user'])
-        cur.execute("SELECT * FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = %s", val)
+        cur.execute('SELECT * FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = "%s"', val)
         #cur.execute(sql)
         check = cur.fetchone()
         if check != None:
