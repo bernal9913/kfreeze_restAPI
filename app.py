@@ -10,7 +10,7 @@ app.config['MYSQL_HOST'] = 'us-cdbr-east-06.cleardb.net'
 app.config['MYSQL_USER'] = 'b7e3a09e061e12'
 app.config['MYSQL_PASSWORD'] = '2f9d3cc1'
 app.config['MYSQL_DB'] = 'heroku_d02c1597b242410'
-
+app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
 mysql = MySQL(app)
 
 
@@ -222,7 +222,7 @@ def modphoto():
 def checkPhoto():
     try:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT photo FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = '" + request.json['user'] + "'")
+        cur.execute("SELECT photo FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = " + request.json['user'])
         #cur.execute(sql)
         check = cur.fetchone()
         if check:
