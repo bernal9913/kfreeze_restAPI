@@ -190,7 +190,49 @@ def delete_user():
     except Exception as ex:
         return jsonify({"msg": "Error: cannot drop the whole table:C"})
 
+@app.route('/dpbernal/add', methods=['POST'])
+def addphoto():
+    try:
+        cur = mysql.connection.cursor()
+        sql = "INSERT INTO `heroku_d02c1597b242410`.`dpbernal`(user, photo) VALUES (%s, %s)"
+        val = jsonify({"user": request.json['user'], "photo": request.json['photo']})
+        cur.execute(sql, val)
+        mysql.connection.commit()
+        return jsonify({"msg":"success"})
+    except Exception as ex:
+        return jsonify({"msg":"error"})
 
+@app.route('/dpbernal/mod', methods=['POST'])
+def modphoto():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = %s", request.json['user'])
+        check_user = cur.fetchone()
+        if check_user:
+            sql = "update `heroku_d02c1597b242410`.`dpbernal` set photo = '{0}' where user = '{1}'".format(request.json['photo'],request.json['user'])
+            cur.execute(sql)
+            mysql.connection.commit()
+            return jsonify({"msg": "success"})
+        else:
+            return jsonify({"msg": "error finding user"})
+    except Exception as e:
+        return jsonify({"msg":"error updating photo"})
+
+@app.route("/dpbernal/check", methods=['POST'])
+def checkPhoto():
+    try:
+        cur = mysql.connection.cursor()
+        sql = "SELECT photo FROM `heroku_d02c1597b242410`.`usersbernal` WHERE user = %s".format(request.json['user'])
+        cur.execute(sql)
+        check = cur.fetchone()
+
+        if check:
+            photo = {'photo': check[0]}
+            return jsonify({"msg":photo})
+        else:
+            return jsonify({"msg":"no photo available"})
+    except Exception as e:
+        return jsonify({"msg": "Error"})
 def page_not_found(error):
     return render_template('not_steph.html'), 404
 
