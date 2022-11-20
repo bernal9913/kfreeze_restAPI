@@ -1,3 +1,4 @@
+import base64
 from crypt import methods
 
 from flask import Flask, render_template, jsonify, request, redirect, url_for
@@ -225,11 +226,13 @@ def checkPhoto():
         val = (request.json['user'])
         cur.execute('SELECT * FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = "%s"', val)
         #cur.execute(sql)
-        check = cur.fetchall()
+        check = cur.fetchone()
         if check != None:
+            base64_encoded_data = base64.b64encode(check[2])
+            base64_message = base64_encoded_data.decode('utf-8')
             usr = {'id_photo': check[0], 'username': check[1],
-                   'photo': check[2]}
-            return jsonify({'user': usr, 'msg': "user founded"})
+                   'photo': base64_message}
+            return jsonify({'user': usr, 'msg': "u"})
         else:
             return jsonify({"msg":"no photo available"})
     except Exception as e:
