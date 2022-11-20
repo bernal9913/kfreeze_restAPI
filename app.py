@@ -225,7 +225,7 @@ def checkPhoto():
         val = (request.json['user'])
         cur.execute('SELECT * FROM `heroku_d02c1597b242410`.`dpbernal` WHERE user = "%s"', val)
         #cur.execute(sql)
-        check = cur.fetchone()
+        check = cur.fetchall()
         if check != None:
             usr = {'id_photo': check[0], 'username': check[1],
                    'photo': check[2]}
