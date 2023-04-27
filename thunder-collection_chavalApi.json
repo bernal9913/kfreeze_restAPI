@@ -1,0 +1,99 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "chavalApi",
+    "dateExported": "2023-04-27T05:39:46.728Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "6bcd8820-030b-47a0-9ba5-33d2311b2d91",
+            "colId": "4ddeb81f-1f59-4d61-9f3b-e5c530e125fb",
+            "containerId": "",
+            "name": "getUsersLisst",
+            "url": "http://127.0.0.1:5000/users",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-04-27T03:59:36.131Z",
+            "modified": "2023-04-27T03:59:47.754Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "607dcc4a-741f-4095-a4ed-3dfc279e2cfb",
+            "colId": "4ddeb81f-1f59-4d61-9f3b-e5c530e125fb",
+            "containerId": "",
+            "name": "loguser",
+            "url": "http://127.0.0.1:5000/log_user",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-04-27T04:02:04.736Z",
+            "modified": "2023-04-27T04:44:59.425Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"user\":\"Chulises\",\n  \"password\":\"ulis\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "82c3fa44-7b84-4071-8c02-5e91fb15fb87",
+            "colId": "4ddeb81f-1f59-4d61-9f3b-e5c530e125fb",
+            "containerId": "",
+            "name": "registaruser",
+            "url": "http://127.0.0.1:5000/users",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2023-04-27T04:05:44.134Z",
+            "modified": "2023-04-27T04:50:07.376Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"user\":\"usereliminado\",\n  \"password\":\"pass\",\n  \"email\":\"eliminado@mail.com\",\n  \"birthdate\":\"2000-12-09\",\n  \"nationality\":\"Mexico\",\n  \"firstName\":\"usuario\",\n  \"lastName\":\"finiquitado\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "4365a08f-bb43-4378-b24c-69b3c8fb9a74",
+            "colId": "4ddeb81f-1f59-4d61-9f3b-e5c530e125fb",
+            "containerId": "",
+            "name": "moduser",
+            "url": "http://127.0.0.1:5000/users",
+            "method": "PUT",
+            "sortNum": 50000,
+            "created": "2023-04-27T04:52:45.813Z",
+            "modified": "2023-04-27T04:55:12.428Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"ulises@mail.com\",\n  \"password\":\"UlisesNueva\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "53080380-874a-448d-b7dd-fec95dd25160",
+            "colId": "4ddeb81f-1f59-4d61-9f3b-e5c530e125fb",
+            "containerId": "",
+            "name": "promoteuser",
+            "url": "http://127.0.0.1:5000/users/demote",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2023-04-27T05:16:26.225Z",
+            "modified": "2023-04-27T05:25:07.863Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\":\"ulises@mail.com\"\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}
