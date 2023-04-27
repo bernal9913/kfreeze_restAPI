@@ -1,4 +1,3 @@
-from crypt import methods
 
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from flask_mysqldb import MySQL
@@ -6,10 +5,15 @@ import MySQLdb.cursors
 from config import config
 
 app = Flask(__name__)
-app.config['MYSQL_HOST'] = 'us-cdbr-east-06.cleardb.net'
-app.config['MYSQL_USER'] = 'b7e3a09e061e12'
-app.config['MYSQL_PASSWORD'] = '2f9d3cc1'
+#app.config['MYSQL_HOST'] = 'us-cdbr-east-06.cleardb.net'
+#app.config['MYSQL_USER'] = 'b7e3a09e061e12'
+#app.config['MYSQL_PASSWORD'] = '2f9d3cc1'
 app.config['MYSQL_DB'] = 'heroku_d02c1597b242410'
+app.config['MYSQL_HOST'] = '127.0.0.1'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+
+
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
 mysql = MySQL(app)
 
@@ -240,5 +244,5 @@ def not_found(error):
     return render_template('not_steph.html'), 404
 
 # uncomment those lines for local testing purposes
-#if __name__ == '__main__':
-#    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", debug=True)
